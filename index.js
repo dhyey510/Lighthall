@@ -2,8 +2,6 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
-const { Navigator } = require("node-navigator");
-const navigator = new Navigator();
 const nodeGeocoder = require("node-geocoder");
 const methodOverride = require("method-override");
 const dataModel = require("./models/dataModel");
@@ -45,7 +43,6 @@ app.get("/", async (req, res) => {
     newData
       .save()
       .then((d) => {
-        console.log("Create Default one!!");
         res.render("index.ejs", { data: d, locations: d.locations });
       })
       .catch((err) => {
@@ -57,47 +54,45 @@ app.get("/", async (req, res) => {
 app.put("/increament", async (req, res) => {
   const oldData = await dataModel.findOne({});
 
-  navigator.geolocation.getCurrentPosition((success, err) => {
-    geoCoder
-      .reverse({ lat: success.latitude, lon: success.longitude })
-      .then((response) => {
-        console.log(response[0]);
-        var flag = false;
-        for (let loc of oldData.locations) {
-          if (
-            loc.city === response[0].city &&
-            loc.country === response[0].country
-          ) {
-            loc.clicks += 1;
-            flag = true;
-          }
+  geoCoder
+    .reverse({ lat: req.body.lat, lon: req.body.long })
+    .then((response) => {
+      // console.log(response[0]);
+      var flag = false;
+      for (let loc of oldData.locations) {
+        if (
+          loc.city === response[0].city &&
+          loc.country === response[0].country
+        ) {
+          loc.clicks += 1;
+          flag = true;
         }
-        if (!flag) {
-          oldData.locations.push({
-            city: response[0].city,
-            country: response[0].country,
-            clicks: 1,
-          });
-          console.log(oldData.locations);
-        }
+      }
+      if (!flag) {
+        oldData.locations.push({
+          city: response[0].city,
+          country: response[0].country,
+          clicks: 1,
+        });
+        console.log(oldData.locations);
+      }
 
-        oldData.totalCount += 1;
+      oldData.totalCount += 1;
 
-        oldData
-          .save()
-          .then((d) => {
-            console.log("success");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+      oldData
+        .save()
+        .then((d) => {
+          console.log("success");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-        res.redirect("/");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
+      res.redirect("/");
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 });
 
 const port = process.env.PORT || 3000;
