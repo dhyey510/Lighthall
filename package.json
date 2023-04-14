@@ -1,0 +1,23 @@
+{
+  "name": "lighthall",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express.js": "^1.0.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^7.0.3",
+    "node-geocoder": "^4.2.0",
+    "node-navigator": "^1.0.1",
+    "nodemon": "^2.0.22",
+    "path": "^0.12.7"
+  }
+}
