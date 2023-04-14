@@ -61,6 +61,7 @@ app.put("/increament", async (req, res) => {
     geoCoder
       .reverse({ lat: success.latitude, lon: success.longitude })
       .then((response) => {
+        console.log(response[0]);
         var flag = false;
         for (let loc of oldData.locations) {
           if (
